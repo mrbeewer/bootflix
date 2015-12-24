@@ -7,64 +7,19 @@
  */
 app.getMovieById = function getMovieById(id) {
 
-  // console.log("app.getMovieById() has been called. nothing happens. wait.. some tumbleweeds are tumbling by! an ID of '" + id + "' was entered.");
+  // set api search options to pass to the calling function
+  dataSpecs = {
+    i: id,
+    apikey: 'd31f1a94',
+    plot: 'full',
+    r: 'json'
+  };
 
-  // request URL for omdb's id search
-  // http://www.omdbapi.com/?i=tt0095016&plot=full&r=json
-
-
-    dataSpecs = {
-      i: id,
-      apikey: 'd31f1a94',
-      plot: 'full',
-      r: 'json'
-    };
-
-    omdbCall(dataSpecs);
-
-
-    // // 1. create your ajax request and then in your success method.
-    // $.ajax({
-    //   url: 'http://www.omdbapi.com/?',
-    //   type: 'GET',
-    //   dataType: 'json',
-    //   data: {
-    //     i: id,
-    //     apikey: 'd31f1a94',
-    //     plot: 'full',
-    //     r: 'json'
-    //   },
-    //   // 2. you should create a new MovieModel object based on the returned
-    //   // result.
-    //   // var movie = new app.MovieModel(data);
-    //   success: function(data) {
-    //     console.log("app.getMovieById() has been successful using an ID of " + id);
-    //     console.log(data);
-    //     options = {
-    //       id: data.imdbID,
-    //       title: data.Title,
-    //       rating: data.imdbRating,
-    //       director: data.Director,
-    //       plot: data.Plot,
-    //       year: data.Year,
-    //       genre: data.Genre,
-    //       poster: data.Poster
-    //     };
-    //     console.log(options);
-    //     // 3. you should create a new MovieView object based on movie model
-    //     var movie = new app.MovieModel(options);
-    //     // 4. you call render() on the view
-    //     var movieView = new app.MovieView(movie);
-    //     // 5. your render() should append the `$el` to the DOM
-    //     movieView.render();
-    //   },
-    //   fail: function(error) {
-    //       console.log("Something has gone wrong below");
-    //       console.log(error);
-    //       console.log("Something has gone wrong ^");
-    //   }
-    // });
+  // api (omdb) call with the specs
+  omdbCall(dataSpecs);
 }
+
+
 
 /**
  * app.getMovieByTitle
@@ -72,13 +27,7 @@ app.getMovieById = function getMovieById(id) {
  */
 app.getMovieByTitle = function getMovieByTitle(title) {
 
-  console.log("app.getMovieByTitle() has been called. the form stares at you blankly. wait, what? A title of '" + title + "' was entered");
-
-  // request URL for omdb's title search:
-  //http://www.omdbapi.com/?t=Die+Hard&y=1988&plot=full&r=json
-
-
-
+  // set api search options to pass to the calling function
   dataSpecs = {
     t: title,
     apikey: 'd31f1a94',
@@ -86,18 +35,11 @@ app.getMovieByTitle = function getMovieByTitle(title) {
     r: 'json'
   };
 
+  // api (omdb) call with the specs
   omdbCall(dataSpecs);
 
-  // 1. create your ajax request and then in your success method.
-  // 2. you should create a new MovieModel object based on the returned
-  // result.
-  // var movie = new app.MovieModel(data);
-  // 3. you should create a new MovieView object based on movie model
-  // 4. you call render() on the view
-  // 5. your render() should append the `$el` to the DOM
-
-
 }
+
 
 
 /**
@@ -106,6 +48,7 @@ app.getMovieByTitle = function getMovieByTitle(title) {
  * @param options  - options object
  */
 app.MovieModel = function MovieModel(options) {
+  // storing items into the model for later use
   this.id = options.id;
   this.title = options.title;
   this.rating = options.rating;
@@ -114,12 +57,7 @@ app.MovieModel = function MovieModel(options) {
   this.year = options.year;
   this.genre = options.genre;
   this.poster = options.poster;
-  // id, title, rating, director, plot, year, genre
-  // should all be in the `options` object
-  // store all the information in the model
 }
-
-
 
 
 
@@ -130,56 +68,52 @@ app.MovieModel = function MovieModel(options) {
  */
 app.MovieView = function MovieView(options) {
   console.log("app.MovieView has been called");
-  // options should contain the `model` for which the view is using
-  // render(options);
-  // 1. create a view
-  // 2. create a render() method
+  // rendering function to display the information
   this.render = function() {
-    // 3. render() should a div with a class of '.movie' via string concatenation
-    //    you will want to add the id, title, rating, director, plot, year,
-    //    and genre. See design/movielayout.html
-    // 4. finally, render() will $(selector).append() each new '.movie' to "#movie-listing".
     console.log("app.MovieView.render has been called");
+    // apparently not all movies have posters! default to the logo
     if (options.poster == "N/A") options.poster = "bootflix-logo.png";
     // $('#movie-listing').html(""); // clear out the view
     $('#movie-listing').append('<div class="movie"/>');
-
     // v-- This is a test to see if it would work properly...it does
     $('.movie:last').html(
       "<table>" +
-      "<tr>" +
-      "<td>" +
-      "<img src='" + options.poster + "' alt='" + options.title + "'>" +
-      "</td>" +
-      "<td>" +
-      "<h3>" + options.title + "</h3><h6><em>ID: " + options.id + "</em></h6>" +
-      "<p>" +
-        "<strong>Released:</strong>" + options.year + "<br>" +
-        "<strong>Directed By:</strong>" + options.director + "<br>" +
-        "<strong>Genre:</strong><em>" + options.genre + "</em><br>" +
-        "<strong>Rating:</strong><em>" + options.rating + "</em>" +
-      "</p><strong>Plot:</strong>" +
-      "<p>" + options.plot + "</p>" +
-      "</td>" +
-      "</tr>" +
+        "<tr>" +
+          "<td>" +
+            "<img src='" + options.poster + "' alt='" + options.title + "'>" +
+          "</td>" +
+          "<td>" +
+            "<h3>" + options.title + "</h3><h6><em>ID: " + options.id + "</em></h6>" +
+            "<p>" +
+            "<strong>Released:</strong>" + options.year + "<br>" +
+            "<strong>Directed By:</strong>" + options.director + "<br>" +
+            "<strong>Genre:</strong><em>" + options.genre + "</em><br>" +
+            "<strong>Rating:</strong><em>" + options.rating + "</em>" +
+            "</p><strong>Plot:</strong>" +
+            "<p>" + options.plot + "</p>" +
+          "</td>" +
+        "</tr>" +
       "</table>"
     );
   }
 }
 
+
+/**
+ * trying to make it more DRY
+ * a function for the omdb call that takes in the search parameters
+ * @param dataSpecs - search terms object
+ */
 function omdbCall(dataSpecs) {
-  // 1. create your ajax request and then in your success method.
   $.ajax({
     url: 'http://www.omdbapi.com/?',
     type: 'GET',
     dataType: 'json',
     data: dataSpecs,
-    // 2. you should create a new MovieModel object based on the returned
-    // result.
-    // var movie = new app.MovieModel(data);
     success: function(data) {
       console.log("app.getMovieById() has been successful using an ID of " + dataSpecs.id);
       console.log(data);
+      // save the info into options
       options = {
         id: data.imdbID,
         title: data.Title,
@@ -191,15 +125,15 @@ function omdbCall(dataSpecs) {
         poster: data.Poster
       };
       console.log(options);
-      // 3. you should create a new MovieView object based on movie model
+      // create a 'movie' object using the options info
       var movie = new app.MovieModel(options);
-      // 4. you call render() on the view
+      // create a view for the new movie model
       var movieView = new app.MovieView(movie);
-      // 5. your render() should append the `$el` to the DOM
+      // render that view
       movieView.render();
     },
     fail: function(error) {
-        console.log("Something has gone wrong below");
+        console.log("Something has gone wrong v");
         console.log(error);
         console.log("Something has gone wrong ^");
     }
