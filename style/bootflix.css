@@ -24,6 +24,9 @@ header a {
   color: aliceblue;
   font-style: italic;
 }
+img {
+  max-width: 300px;
+}
 section {
     padding: 8px;
 }
